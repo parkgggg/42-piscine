@@ -5,41 +5,62 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: gupark <gupark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/12 14:19:07 by gupark            #+#    #+#             */
-/*   Updated: 2021/10/12 14:19:33 by gupark           ###   ########.fr       */
+/*   Created: 2021/10/14 02:29:56 by gupark            #+#    #+#             */
+/*   Updated: 2021/10/14 02:58:14 by gupark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include<unistd.h>
 
-void ft_print_comb(void)
+int	serialcheck(int value, int size, char *numbs)
 {
-	char firstd;
-	char secondd;
-	char thirdd;
+	int	index;
 
-	firstd = '0';
-	while(firstd <= '9')
+	index = 0;
+	if (value == 9)
 	{
-		secondd = firstd+1;
-		while(secondd <= '9')
+		while (index < size - 1)
 		{
-			thirdd = secondd+1;
-			while(thirdd <= '9')
-			{
-				write(1, &firstd, 1);
-				write(1, &secondd, 1);
-				write(1, &thirdd, 1);
-				if(firstd == '7' && secondd == '8' && thirdd == '9')
-				{
-				}
-				else
-					write(1, ", ", 1);
-				thirdd++;
-			} 
-			secondd++;
+			if (numbs[index] + 1 != numbs[index + 1])
+				return (0);
+			index++;
 		}
-
-		firstd++;
+		return (1);
 	}
+	return (0);
+}
+
+void	recursive_print(char *numbs, int size, int value, int index)
+{
+	if (index < size - 1)
+	{
+		while (value < 10)
+		{
+			numbs[index] = value + '0';
+			recursive_print(numbs, size, value++ + 1, index + 1);
+		}
+	}
+	else
+	{
+		while (value < 10)
+		{
+			numbs[index] = value + '0';
+			write(1, numbs, size);
+			if (serialcheck(value++, size, numbs) != 1)
+			{
+				write(1, ", ", 2);
+			}
+		}
+	}
+}
+
+void	ft_print_comb(void)
+{
+	char	number[4];
+	int		startvalue;
+	int		startindex;
+
+	startvalue = 0;
+	startindex = 0;
+	recursive_print(number, 3, startvalue, startindex);
 }

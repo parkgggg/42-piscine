@@ -5,46 +5,58 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: gupark <gupark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/12 14:19:41 by gupark            #+#    #+#             */
-/*   Updated: 2021/10/12 14:20:07 by gupark           ###   ########.fr       */
+/*   Created: 2021/10/14 01:33:48 by gupark            #+#    #+#             */
+/*   Updated: 2021/10/14 03:03:49 by gupark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include<unistd.h>
 
-void ft_print_comb2(void)
+int	serialcheck(int value, int size, char *numbs)
 {
-	int firstds;
-	int secondds;
-	char fds[3];
-	char sds[3];
-
-	firstds = 0;
-	while(firstds <= 99)
+	if (numbs[0] == '9' && numbs[1] == '8')
 	{
-		fds[0] = firstds/10 + '0';
-		fds[1] = firstds%10 + '0';
-		secondds = firstds+1;
-		while(secondds <= 99)
+		if (numbs[3] == '9' && numbs[4] == '9')
+			return (1);
+	}
+	else
+		return (0);
+}
+
+void	recursive_print(char *numbs, int size, int value, int index)
+{
+	if (index < size - 2)
+	{
+		while (value < 100)
 		{
-			sds[0] = secondds/10 + '0';		
-			sds[1] = secondds%10 + '0';
-			write(1, fds, 3);
-			write(1, " ", 1);
-			write(1, sds, 3);
-			if(firstds == 98 && secondds == 99)
-			{
-			}
-			else 
-				write(1, ", ", 2);
-			secondds++;
+			numbs[index] = value / 10 + '0';
+			numbs[index + 1] = value % 10 + '0';
+			numbs[index + 2] = ' ';
+			recursive_print(numbs, size, value++ + 1, index + 3);
 		}
-		firstds++;
+	}
+	else
+	{
+		while (value < 100)
+		{
+			numbs[index] = value / 10 + '0';
+			numbs[index + 1] = value % 10 + '0';
+			write(1, numbs, size);
+			if (serialcheck(value++, size, numbs) != 1)
+			{
+				write(1, ", ", 2);
+			}
+		}
 	}
 }
 
-int main(void)
+void	ft_print_comb2(void)
 {
-	ft_print_comb2();
-	return(0);
+	char	number[6];
+	int		startvalue;
+	int		startindex;
+
+	startvalue = 0;
+	startindex = 0;
+	recursive_print(number, 5, startvalue, startindex);
 }
